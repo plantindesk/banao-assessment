@@ -1,0 +1,63 @@
+# pyrefly.toml
+# Strictest Configuration
+
+# -----------------------------------------------------------------------------
+# File Discovery
+# -----------------------------------------------------------------------------
+
+# Check all Python files recursively.
+project-includes = ["**/*.py*"]
+
+# strictness: Do not allow .gitignore or .ignore files to hide code from 
+# the type checker. All files matching project-includes will be checked.
+use-ignore-files = false
+
+# -----------------------------------------------------------------------------
+# Import Resolution
+# -----------------------------------------------------------------------------
+
+# strictness: Disable "magic" search path additions. 
+# This forces the project structure to be explicit and correct.
+disable-search-path-heuristics = true
+
+# Define the root search path explicitly (typically current directory).
+search-path = ["."]
+
+# strictness: Do not replace imports with Any. Do not ignore missing imports.
+# The tool will fail if dependencies cannot be resolved.
+replace-imports-with-any = []
+ignore-missing-imports = []
+
+# -----------------------------------------------------------------------------
+# Type Inference Behaviors
+# -----------------------------------------------------------------------------
+
+# strictness: Check the bodies of untyped functions and attempt to infer 
+# the return type. Do not skip them, and do not default return types to Any.
+untyped-def-behavior = "check-and-infer-return-type"
+
+# strictness: Infer types based on first usage (e.g., `x = []`) rather than 
+# defaulting to Any.
+infer-with-first-use = true
+
+# -----------------------------------------------------------------------------
+# Error Suppression & Reporting
+# -----------------------------------------------------------------------------
+
+# strictness: Check generated code (files with @generated) for errors.
+ignore-errors-in-generated-code = false
+
+# strictness: Do not respect ignore comments from other tools (e.g., # mypy: ignore).
+permissive-ignores = false
+
+# strictness: Disable ALL ignore directives. 
+# Passing an empty list disables `# type: ignore` and `# pyrefly: ignore`.
+# This forces code correction rather than error suppression.
+enabled-ignores = []
+
+# strictness: Ensure errors are shown in IDE contexts.
+disable-type-errors-in-ide = false
+
+# strictness: The documentation states that an empty errors table means 
+# "all errors are enabled by default".
+[errors]
