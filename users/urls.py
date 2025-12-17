@@ -12,8 +12,9 @@ urlpatterns = [
     path('profile/', views.ProfileView.as_view(), name='api-profile'),
     path('doctors/', views.DoctorListView.as_view(), name='api-doctor-list'),
     
-    # Google Calendar Integration
+# Google Calendar endpoints
     path('google-calendar/init/', views.GoogleCalendarInitView.as_view(), name='google-calendar-init'),
-    # This path matches REDIRECT_URI in settings.py: http://localhost:8000/oauth2callback
+    path('google-calendar/status/', views.GoogleCalendarStatusView.as_view(), name='google-calendar-status'),
+    path('google-calendar/disconnect/', views.GoogleCalendarDisconnectView.as_view(), name='google-calendar-disconnect'),
     path('oauth2callback', views.GoogleCalendarRedirectView.as_view(), name='google-calendar-redirect'),
 ]
