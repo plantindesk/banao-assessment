@@ -1,0 +1,82 @@
+frameworkVersion: '4'
+
+service: hms-project
+
+provider:
+  name: aws
+  runtime: python3.12
+  region: us-east-1
+  stage: dev
+  environment:
+    DEV_MODE: "True"
+    DJANGO_SETTINGS_MODULE: main.settings
+    EMAIL_SERVICE_PROVIDER: ${opt:provider, 'CONSOLE'}  # Changed default to 'CONSOLE'
+    AWS_SES_REGION: us-east-1
+    SMTP_HOST: ${opt:smtp-host, 'localhost'}
+    SMTP_PORT: ${opt:smtp-port, '1025'}
+    SMTP_USER: ${opt:smtp-user, ''}
+    SMTP_PASSWORD: ${opt:smtp-password, ''}
+    SENDER_EMAIL: ${opt:sender, 'noreply@hospital-dev.com'}
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "*"
+    - Effect: "Allow"
+      Action:
+        - "ses:SendEmail"
+      Resource: "*"
+
+plugins:
+  - serverless-wsgi
+  - serverless-python-requirements
+  - serverless-offline
+
+custom:
+  wsgi:
+    app: main.wsgi.application
+    packRequirements: false
+  pythonRequirements:
+    dockerizePip: non-linux
+    pythonBin: .venv/Scripts/python.exe
+    layer: true
+    fileName: pyproject.toml
+    usePoetry: false
+  serverless-offline:
+    httpPort: 3003
+    noPrependStageInUrl: true
+
+functions:
+  app:
+    handler: wsgi_handler.handler
+    events:
+      - http:
+          path: /{proxy+}
+          method: ANY
+          cors: true
+
+  sendEmail:
+    handler: handler.send_email
+    events:
+      - http:
+          path: /email/send
+          method: post
+          cors: true
+
+package:
+  individually: false
+  exclude:
+    - .git/**
+    - .serverless/**
+    - node_modules/**
+    - __pycache__/**
+    - "*.pyc"
+    - .pytest_cache/**
+    - db.sqlite3
+    - google_calender_secret.json
