@@ -12,10 +12,9 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 import os
 from pathlib import Path
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:5173')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -29,12 +28,38 @@ REDIRECT_URI = "http://localhost:8000/oauth2callback"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+REDIRECT_URI = 'https://127.0.0.1:8000/oauth2callback'
 ALLOWED_HOSTS = []
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Outputs to terminal   
 AUTH_USER_MODEL = "users.User"
 # Application definition
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://127.0.0.1:5173",
+    "https://localhost:5173",  # Add this
+    "https://127.0.0.1:5173",  # Add this
+    "https://127.0.0.1:8000",  # Add this for the backend itself
+]
+CORS_ALLOW_CREDENTIALS = True
 
+# Session settings
+SESSION_COOKIE_SAMESITE = 'Lax'
+SECURE_SSL_REDIRECT = False  # Only for development
+SESSION_COOKIE_SECURE = False  # Only for development
+CSRF_COOKIE_SECURE = False  # Only for development
+SESSION_COOKIE_HTTPONLY = True
+
+# CSRF settings
+CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SECURE = False  # Set to True in production with HTTPS
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+    "https://localhost:5173",
+    "http://localhost:3000",
+]
+
+# REST Framework settings
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -48,6 +73,7 @@ INSTALLED_APPS = [
     "users",
     "scheduling",
     "api",
+    'django_extensions'
 ]
 
 REST_FRAMEWORK = {
@@ -69,6 +95,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware"
 ]
 
 ROOT_URLCONF = "main.urls"
