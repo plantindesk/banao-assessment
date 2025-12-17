@@ -31,7 +31,7 @@ REDIRECT_URI = "http://localhost:8000/oauth2callback"
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Outputs to terminal   
 AUTH_USER_MODEL = "users.User"
 # Application definition
 
