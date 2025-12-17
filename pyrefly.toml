@@ -48,12 +48,10 @@ infer-with-first-use = true
 ignore-errors-in-generated-code = false
 
 # strictness: Do not respect ignore comments from other tools (e.g., # mypy: ignore).
-permissive-ignores = false
 
 # strictness: Disable ALL ignore directives. 
 # Passing an empty list disables `# type: ignore` and `# pyrefly: ignore`.
 # This forces code correction rather than error suppression.
-enabled-ignores = []
 
 # strictness: Ensure errors are shown in IDE contexts.
 disable-type-errors-in-ide = false
